@@ -26,12 +26,15 @@ module Picasso
 
     def initialize(nodes)
       @nodes = nodes
+      @nodes.each_with_index do |node, i|
+        node.id = "node#{i}"
+      end
     end
   end
 
   class Node
     attr_reader :label, :position
-    attr_accessor :parents
+    attr_accessor :id, :parents
 
     def initialize(label, x, y)
       @label = label
@@ -41,7 +44,7 @@ module Picasso
 
     def inspect
       parents_array = parents.collect { |parent| parent.label + parent.position.inspect }
-      "#<Picasso::Node #{label.inspect} #{position.inspect} #{parents_array.inspect}"
+      "#<Picasso::Node #{id} #{label.inspect} #{position.inspect} #{parents_array.inspect}"
     end
   end
 

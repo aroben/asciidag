@@ -84,4 +84,12 @@ EOF
     h = find_node @graph4, 'H'
     assert_equal [g, c], h.parents
   end
+
+  test 'nodes get unique IDs' do
+    ids = {}
+    @graph3.nodes.each do |node|
+      assert !ids.has_key?(node.id), "Found duplicate IDs: #{node.inspect}, #{ids[node.id].inspect}"
+      ids[node.id] = node
+    end
+  end
 end
