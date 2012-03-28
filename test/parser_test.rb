@@ -30,8 +30,6 @@ EOF
   end
 
   test 'parses nodes' do
-    assert_nil find_node(@graph1, '/')
-
     a = find_node @graph1, 'A'
     e = find_node @graph1, 'E'
     assert_equal [6, 2], a.position
@@ -53,10 +51,18 @@ EOF
     assert_equal [13, 0], find_node(@graph2, 'F').position
   end
 
-  test 'handles multiple nodes with the same label' do
-    assert_nil find_node(@graph3, '\\')
-    assert_nil find_node(@graph3, '|')
+  test 'does not count edges as nodes' do
+    ['-', '/', '|', '\\'].each do |char|
+      (1..4).each do |i|
+        graph_name = "@graph#{i}"
+        graph = self.instance_variable_get(graph_name)
+        node = find_node(graph, char)
+        assert_nil node, "Found unexpected node #{node.inspect} in #{graph_name}"
+      end
+    end
+  end
 
+  test 'handles multiple nodes with the same label' do
     os = @graph3.nodes.find_all { |n| n.label == 'o' }
     assert_equal 10, os.length
 
