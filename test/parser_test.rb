@@ -30,18 +30,24 @@ EOF
   test 'handles multiple nodes with the same label' do
     text = <<-EOF
 o---o---o---o---o  master
-    |            \
+    |            \\
     |             o'--o'--o'  topic
-     \
+     \\
       o---o---o---o---o  next
 EOF
 
     graph = Picasso.parse text
+
     assert_nil find_node(graph, '\\')
     assert_nil find_node(graph, '|')
+
     os = graph.nodes.find_all { |n| n.label == 'o' }
-    o_primes = graph.nodes.find_all { |n| n.label == "o'" }
     assert_equal 10, os.length
+
+    o_primes = graph.nodes.find_all { |n| n.label == "o'" }
     assert_equal 3, o_primes.length
+
+    origin = os[5]
+    assert_equal [0, 4], origin.position
   end
 end
