@@ -30,6 +30,25 @@ module Picasso
       end
       @branch_labels, @nodes = nodes.partition { |node| node.label =~ /[a-z]{2,}/ }
     end
+
+    def dot
+      result = []
+      result << 'digraph {'
+      result << '  node [shape=circle];'
+      nodes.each do |node|
+        x, y = node.position
+        result << "  #{node.id} [label=\"#{node.label}\", pos=\"#{x * PIXELS_PER_CHARACTER_X},#{y * PIXELS_PER_CHARACTER_Y}\"];"
+        node.parents.each do |parent|
+          result << "  #{node.id} -> #{parent.id};"
+        end
+      end
+      branch_labels.each do |branch|
+        x, y = branch.position
+        result << "  #{branch.id} [shape=none, label=\"#{branch.label}\", pos=\"#{x * PIXELS_PER_CHARACTER_X},#{y * PIXELS_PER_CHARACTER_Y}\"];"
+      end
+      result << '}'
+      result.join "\n"
+    end
   end
 
   class Node
@@ -88,4 +107,6 @@ module Picasso
   end
 
   NODE_REGEXP = /[^\s\-\/\\|]+/
+  PIXELS_PER_CHARACTER_X = 25
+  PIXELS_PER_CHARACTER_Y = 40
 end
