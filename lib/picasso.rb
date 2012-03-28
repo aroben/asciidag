@@ -16,5 +16,5 @@ class Picasso
 
   private
 
-  NODE_REGEXP = /\w+/
+  NODE_REGEXP = /[^\s-]+/
 end
