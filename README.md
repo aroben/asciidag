@@ -1,6 +1,8 @@
 # Picasso
 
-Picasso is a script that converts ASCII art of directed acyclic graphs (DAGs) into pretty pictures. I.e., it turns this:
+Picasso is a script that converts ASCII art of directed acyclic graphs (DAGs), typically representing the history of a Git repository, into pretty pictures.
+
+I.e., it turns this:
 
 ```
        A---B---C topic
