@@ -66,4 +66,19 @@ EOF
     assert_equal [os[6]], os[0].parents
     assert_equal [os[9]], o_primes[0].parents
   end
+
+  test 'merge commits have multiple parents' do
+    text = <<-EOF
+      A---B---C topic
+     /         \\
+D---E---F---G---H master
+EOF
+
+    graph = Picasso.parse text
+
+    c = find_node graph, 'C'
+    g = find_node graph, 'G'
+    h = find_node graph, 'H'
+    assert_equal [g, c], h.parents
+  end
 end
