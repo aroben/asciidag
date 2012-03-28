@@ -12,7 +12,7 @@ I.e., it turns this:
 
 …into this:
 
-![](http://cl.ly/460v2L3q0z3h3k1t1F2s/rebase.png)
+![](http://cl.ly/3Z2S3z1c2T2e1N3j0R14/sample.png)
 
 ## Requirements
 
