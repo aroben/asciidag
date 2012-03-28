@@ -93,4 +93,10 @@ EOF
       ids[node.id] = node
     end
   end
+
+  test 'branch labels are separate from nodes' do
+    master = @graph1.branch_labels.find { |l| l.label == 'master' }
+    assert master
+    assert_nil find_node(@graph1, 'master')
+  end
 end

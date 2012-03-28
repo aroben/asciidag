@@ -22,13 +22,13 @@ module Picasso
   end
 
   class Graph
-    attr_reader :nodes
+    attr_reader :nodes, :branch_labels
 
     def initialize(nodes)
-      @nodes = nodes
-      @nodes.each_with_index do |node, i|
+      nodes.each_with_index do |node, i|
         node.id = "node#{i}"
       end
+      @branch_labels, @nodes = nodes.partition { |node| node.label =~ /[a-z]{2,}/ }
     end
   end
 
