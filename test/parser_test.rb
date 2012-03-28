@@ -8,10 +8,10 @@ context 'Parser' do
 D---E---F---G master
 EOF
     graph = Picasso.parse text
-    assert !graph.nodes.has_key?('/')
-    assert_equal [6, 2], graph.nodes['A']
-    assert_equal [10, 2], graph.nodes['B']
-    assert_equal [0, 0], graph.nodes['D']
+    assert_nil find_node(graph, '/')
+    assert_equal [6, 2], find_node(graph, 'A').position
+    assert_equal [10, 2], find_node(graph, 'B').position
+    assert_equal [0, 0], find_node(graph, 'D').position
   end
 
   test 'parses nodes with prime names' do
@@ -21,9 +21,9 @@ EOF
 D---E---A'---F master
 EOF
     graph = Picasso.parse text
-    assert_equal [15, 2], graph.nodes["B'"]
-    assert_equal [20, 2], graph.nodes["C'"]
-    assert_equal [8, 0], graph.nodes["A'"]
-    assert_equal [13, 0], graph.nodes['F']
+    assert_equal [15, 2], find_node(graph, "B'").position
+    assert_equal [20, 2], find_node(graph, "C'").position
+    assert_equal [8, 0], find_node(graph, "A'").position
+    assert_equal [13, 0], find_node(graph, 'F').position
   end
 end

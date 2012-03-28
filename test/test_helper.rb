@@ -27,3 +27,7 @@ def context(*args, &block)
   (class << klass; self end).send(:define_method, :name) { name.gsub(/\W/,'_') }
   klass.class_eval &block
 end
+
+def find_node(graph, label)
+  return graph.nodes.find { |n| n.label == label }
+end
