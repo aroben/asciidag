@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'picasso'
+require 'tempfile'
+
+parser = OptionParser.new do |opts|
+  opts.banner = "Usage: #{File.basename __FILE__} input.txt output.png"
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end.parse!
+
+input, output = *ARGV
+unless input && output
+  puts parser.help
+  exit 1
+end
+
+unless system("which neato 2>&1 >/dev/null")
+  $stderr.puts "You need to install Graphviz first.\n\n"
+  $stderr.puts "If you're on a Mac, this should be as easy as:"
+  $stderr.puts "  brew install graphviz"
+  exit 1
+end
+
+input_contents = File.open(input) { |f| f.read }
+output_contents = Picasso.parse(input_contents).dot
+
+temp_file = Tempfile.new 'picasso.dot'
+temp_file.print output_contents
+temp_file.close
+
+success = system('neato', '-n', '-T', 'png', '-o', output, temp_file.path)
+temp_file.unlink
+exit 1 unless success
