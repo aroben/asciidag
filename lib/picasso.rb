@@ -1,13 +1,14 @@
 module Picasso
   def self.parse(text)
     nodes = {}
-    text.split("\n").each_with_index do |line, y|
+    lines = text.split "\n"
+    lines.each_with_index do |line, row|
       i = 0
       while i < line.length
         x = line.index NODE_REGEXP, i
         break if x.nil?
         node = line[x, line.length - x][NODE_REGEXP]
-        nodes[node] = [x, y]
+        nodes[node] = [x, lines.length - row - 1]
         i = x + node.length
       end
     end
