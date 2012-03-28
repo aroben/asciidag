@@ -37,6 +37,8 @@ o---o---o---o---o  master
 EOF
 
     graph = Picasso.parse text
+    assert_nil find_node(graph, '\\')
+    assert_nil find_node(graph, '|')
     os = graph.nodes.find_all { |n| n.label == 'o' }
     o_primes = graph.nodes.find_all { |n| n.label == "o'" }
     assert_equal 10, os.length

@@ -34,5 +34,5 @@ module Picasso
 
   private
 
-  NODE_REGEXP = /[^\s\-\/]+/
+  NODE_REGEXP = /[^\s\-\/\\|]+/
 end
