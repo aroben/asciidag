@@ -1,4 +1,4 @@
-class Picasso
+module Picasso
   def self.parse(text)
     nodes = {}
     text.split("\n").each_with_index do |line, y|
@@ -11,7 +11,15 @@ class Picasso
         i = x + node.length
       end
     end
-    nodes
+    Graph.new nodes
+  end
+
+  class Graph
+    attr_reader :nodes
+
+    def initialize(nodes)
+      @nodes = nodes
+    end
   end
 
   private
