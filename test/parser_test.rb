@@ -26,4 +26,20 @@ EOF
     assert_equal [8, 0], find_node(graph, "A'").position
     assert_equal [13, 0], find_node(graph, 'F').position
   end
+
+  test 'handles multiple nodes with the same label' do
+    text = <<-EOF
+o---o---o---o---o  master
+    |            \
+    |             o'--o'--o'  topic
+     \
+      o---o---o---o---o  next
+EOF
+
+    graph = Picasso.parse text
+    os = graph.nodes.find_all { |n| n.label == 'o' }
+    o_primes = graph.nodes.find_all { |n| n.label == "o'" }
+    assert_equal 10, os.length
+    assert_equal 3, o_primes.length
+  end
 end
