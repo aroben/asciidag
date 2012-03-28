@@ -11,8 +11,9 @@ parser = OptionParser.new do |opts|
     puts opts
     exit
   end
-end.parse!
+end
 
+parser.parse!
 input, output = *ARGV
 unless input && output
   puts parser.help
