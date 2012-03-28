@@ -77,6 +77,11 @@ module Picasso
         inner.call [x, y + 1]
       when '/'
         inner.call [x - 1, y - 1]
+      when NODE_REGEXP
+        # This might be part of a multi-character node label.
+        start_x = line.rindex(/[\s\-\/\\|]/, x)
+        return if start_x.nil?
+        inner.call [start_x + 1, y]
       end
     end
     positions_to_search.call(position).collect { |p| inner.call p }.reject { |p| p.nil? }

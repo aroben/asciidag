@@ -76,6 +76,7 @@ EOF
     assert_equal [origin], os[6].parents
     assert_equal [os[6]], os[0].parents
     assert_equal [os[9]], o_primes[0].parents
+    assert_equal [o_primes[0]], o_primes[1].parents
   end
 
   test 'merge commits have multiple parents' do
