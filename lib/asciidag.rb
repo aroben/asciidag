@@ -78,7 +78,8 @@ module AsciiDag
   def self.find_and_remove_arrowed_branch_label(line, y)
       match = line.match ARROWED_BRANCH_LABEL_REGEXP
       return if match.nil?
-      label = match[1]
+      label = match[2]
+      # Position the label where the arrow starts.
       x = match.offset(1)[0]
       line[ARROWED_BRANCH_LABEL_REGEXP] = ''
       Node.new label, x, y
@@ -122,7 +123,7 @@ module AsciiDag
   end
 
   NODE_REGEXP = /[^\s\-\/\\|]+/
-  ARROWED_BRANCH_LABEL_REGEXP = /\s+<-- ([\w\s]+)$/
+  ARROWED_BRANCH_LABEL_REGEXP = /\s+(<--) ([\w\s]+)$/
   PIXELS_PER_CHARACTER_X = 25
   PIXELS_PER_CHARACTER_Y = 40
 end

@@ -40,7 +40,7 @@ EOF
          o--o--o <-- Branch A
         /
  o--o--o <-- master
-        \
+        \\
          o--o--o <-- Branch B
 EOF
   end
@@ -124,8 +124,17 @@ EOF
 
   test 'recognizes branch label arrows' do
     assert_nil find_node(@graph6, '<')
-    assert_not_nil find_branch_label(@graph6, 'Branch A')
-    assert_not_nil find_branch_label(@graph6, 'master')
-    assert_not_nil find_branch_label(@graph6, 'Branch B')
+
+    branch_a = find_branch_label @graph6, 'Branch A'
+    assert_not_nil branch_a
+    assert_equal [17, 4], branch_a.position
+
+    master = find_branch_label @graph6, 'master'
+    assert_not_nil master
+    assert_equal [9, 2], master.position
+
+    branch_b = find_branch_label @graph6, 'Branch B'
+    assert_not_nil branch_b
+    assert_equal [17, 0], branch_b.position
   end
 end
