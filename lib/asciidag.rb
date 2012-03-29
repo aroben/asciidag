@@ -4,6 +4,12 @@ module AsciiDag
     nodes_by_position = {}
     lines = text.gsub("\t", ' ' * 8).split("\n").reverse
     lines.each_with_index do |line, y|
+      branch_label = find_and_remove_arrowed_branch_label(line, y)
+      unless branch_label.nil?
+        nodes << branch_label
+        nodes_by_position[branch_label.position] = branch_label
+      end
+
       i = 0
       while i < line.length
         x = line.index NODE_REGEXP, i
@@ -69,6 +75,15 @@ module AsciiDag
 
   private
 
+  def self.find_and_remove_arrowed_branch_label(line, y)
+      match = line.match ARROWED_BRANCH_LABEL_REGEXP
+      return if match.nil?
+      label = match[1]
+      x = match.offset(1)[0]
+      line[ARROWED_BRANCH_LABEL_REGEXP] = ''
+      Node.new label, x, y
+  end
+
   def self.find_parents(position, nodes_by_position, lines)
     positions_to_search = lambda do |position|
       x = position[0] - 1
@@ -107,6 +122,7 @@ module AsciiDag
   end
 
   NODE_REGEXP = /[^\s\-\/\\|]+/
+  ARROWED_BRANCH_LABEL_REGEXP = /\s+<-- ([\w\s]+)$/
   PIXELS_PER_CHARACTER_X = 25
   PIXELS_PER_CHARACTER_Y = 40
 end

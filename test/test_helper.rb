@@ -28,6 +28,10 @@ def context(*args, &block)
   klass.class_eval &block
 end
 
+def find_branch_label(graph, label)
+  return graph.branch_labels.find { |n| n.label == label }
+end
+
 def find_node(graph, label)
   return graph.nodes.find { |n| n.label == label }
 end

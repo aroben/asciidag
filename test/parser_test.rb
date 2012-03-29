@@ -35,6 +35,14 @@ EOF
 			       \\
 				L--M
 EOF
+
+    @graph6 = AsciiDag.parse <<-EOF
+         o--o--o <-- Branch A
+        /
+ o--o--o <-- master
+        \
+         o--o--o <-- Branch B
+EOF
   end
 
   test 'parses nodes' do
@@ -112,5 +120,12 @@ EOF
     l = find_node @graph5, 'L'
     j = find_node @graph5, 'J'
     assert_equal [j], l.parents
+  end
+
+  test 'recognizes branch label arrows' do
+    assert_nil find_node(@graph6, '<')
+    assert_not_nil find_branch_label(@graph6, 'Branch A')
+    assert_not_nil find_branch_label(@graph6, 'master')
+    assert_not_nil find_branch_label(@graph6, 'Branch B')
   end
 end
