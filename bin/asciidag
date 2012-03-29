@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'asciidag'
 require 'optparse'
-require 'picasso'
 require 'tempfile'
 
 parser = OptionParser.new do |opts|
@@ -28,9 +28,9 @@ unless system("which neato 2>&1 >/dev/null")
 end
 
 input_contents = File.open(input) { |f| f.read }
-output_contents = Picasso.parse(input_contents).dot
+output_contents = AsciiDag.parse(input_contents).dot
 
-temp_file = Tempfile.new 'picasso.dot'
+temp_file = Tempfile.new 'asciidag.dot'
 temp_file.print output_contents
 temp_file.close
 

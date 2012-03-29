@@ -2,19 +2,19 @@ require File.expand_path '../test_helper', __FILE__
 
 context 'Parser' do
   setup do
-    @graph1 = Picasso.parse <<-EOF
+    @graph1 = AsciiDag.parse <<-EOF
       A---B---C topic
      /
 D---E---F---G master
 EOF
 
-    @graph2 = Picasso.parse <<-EOF
+    @graph2 = AsciiDag.parse <<-EOF
                B'---C' topic
               /
 D---E---A'---F master
 EOF
 
-    @graph3 = Picasso.parse <<-EOF
+    @graph3 = AsciiDag.parse <<-EOF
 o---o---o---o---o  master
     |            \\
     |             o'--o'--o'  topic
@@ -22,7 +22,7 @@ o---o---o---o---o  master
       o---o---o---o---o  next
 EOF
 
-    @graph4 = Picasso.parse <<-EOF
+    @graph4 = AsciiDag.parse <<-EOF
       A---B---C topic
      /         \\
 D---E---F---G---H master

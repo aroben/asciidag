@@ -1,7 +1,7 @@
 dir = File.dirname(File.expand_path(__FILE__))
 $TEST_DIR = File.dirname(File.expand_path(__FILE__))
 $TESTING = true
-require 'picasso'
+require 'asciidag'
 
 ##
 # test/spec/mini 5

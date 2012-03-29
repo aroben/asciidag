@@ -7,6 +7,6 @@ context 'dot output' do
      /
 D---E---F---G master
 EOF
-    assert_equal '', Picasso.parse(text).dot
+    assert_equal '', AsciiDag.parse(text).dot
   end
 end

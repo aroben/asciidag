@@ -1,6 +1,6 @@
-# Picasso
+# AsciiDag
 
-Picasso is a script that converts ASCII art of directed acyclic graphs (DAGs), typically representing the history of a Git repository, into pretty pictures.
+AsciiDag is a script that converts ASCII art of directed acyclic graphs (DAGs), typically representing the history of a Git repository, into pretty pictures.
 
 I.e., it turns this:
 
@@ -23,26 +23,26 @@ I.e., it turns this:
 Given a `graph.txt` file that contains an ASCII DAG:
 
 ```
-$ picasso graph.txt graph.png
+$ asciidag graph.txt graph.png
 ```
 
 ## Source
 
-Picasso's Git repo is available on GitHub, and can be browsed at:
+AsciiDag's Git repo is available on GitHub, and can be browsed at:
 
 ```
-http://github.com/aroben/picasso
+http://github.com/aroben/asciidag
 ```
 
 and cloned with:
 
 ```
-git clone git://github.com/aroben/picasso.git
+git clone git://github.com/aroben/asciidag.git
 ```
 
 ### Contributing
 
-If you'd like to hack on Picasso, follow these instructions:
+If you'd like to hack on AsciiDag, follow these instructions:
 
 1. Fork the project to your own account
 2. Clone down your fork

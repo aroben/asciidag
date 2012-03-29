@@ -1,4 +1,4 @@
-module Picasso
+module AsciiDag
   def self.parse(text)
     nodes = []
     nodes_by_position = {}
@@ -63,7 +63,7 @@ module Picasso
 
     def inspect
       parents_array = parents.collect { |parent| parent.label + parent.position.inspect }
-      "#<Picasso::Node #{id} #{label.inspect} #{position.inspect} #{parents_array.inspect}"
+      "#<AsciiDag::Node #{id} #{label.inspect} #{position.inspect} #{parents_array.inspect}"
     end
   end
 
