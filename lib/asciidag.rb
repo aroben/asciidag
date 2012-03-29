@@ -2,7 +2,7 @@ module AsciiDag
   def self.parse(text)
     nodes = []
     nodes_by_position = {}
-    lines = text.split("\n").reverse
+    lines = text.gsub("\t", ' ' * 8).split("\n").reverse
     lines.each_with_index do |line, y|
       i = 0
       while i < line.length

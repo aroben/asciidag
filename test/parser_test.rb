@@ -27,6 +27,14 @@ EOF
      /         \\
 D---E---F---G---H master
 EOF
+
+    @graph5 = AsciiDag.parse <<-EOF
+		E-------F
+		 \\       \\
+		  G---H---I---J
+			       \\
+				L--M
+EOF
   end
 
   test 'parses nodes' do
@@ -98,5 +106,11 @@ EOF
     master = @graph1.branch_labels.find { |l| l.label == 'master' }
     assert master
     assert_nil find_node(@graph1, 'master')
+  end
+
+  test 'treats tabs as 8 spaces' do
+    l = find_node @graph5, 'L'
+    j = find_node @graph5, 'J'
+    assert_equal [j], l.parents
   end
 end
