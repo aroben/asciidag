@@ -43,6 +43,12 @@ EOF
         \\
          o--o--o <-- Branch B
 EOF
+
+    @graph7 = AsciiDag.parse <<-EOF
+ o--o--O--o--o--o <-- origin
+        \\        \\
+         t--t--t--m <-- their branch:
+EOF
   end
 
   test 'parses nodes' do
@@ -136,5 +142,11 @@ EOF
     branch_b = find_branch_label @graph6, 'Branch B'
     assert_not_nil branch_b
     assert_equal [17, 0], branch_b.position
+
+    assert_nil find_node(@graph7, '<')
+
+    their_branch = find_branch_label @graph7, 'their branch:'
+    assert_not_nil their_branch
+    assert_equal [20, 0], their_branch.position
   end
 end
