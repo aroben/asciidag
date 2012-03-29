@@ -2,22 +2,22 @@ module AsciiDag
   def self.parse(text)
     nodes = []
     nodes_by_position = {}
+    add_node = lambda do |node|
+      return if node.nil?
+      nodes << node
+      nodes_by_position[node.position] = node
+    end
+
     lines = text.gsub("\t", ' ' * 8).split("\n").reverse
     lines.each_with_index do |line, y|
-      branch_label = find_and_remove_arrowed_branch_label(line, y)
-      unless branch_label.nil?
-        nodes << branch_label
-        nodes_by_position[branch_label.position] = branch_label
-      end
+      add_node.call find_and_remove_arrowed_branch_label(line, y)
 
       i = 0
       while i < line.length
         x = line.index NODE_REGEXP, i
         break if x.nil?
         label = line[x, line.length - x][NODE_REGEXP]
-        node = Node.new label, x, y
-        nodes << node
-        nodes_by_position[node.position] = node
+        add_node.call Node.new(label, x, y)
         i = x + label.length
       end
     end
