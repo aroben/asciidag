@@ -90,17 +90,44 @@ module AsciiDag
   end
 
   def self.find_parents(position, nodes_by_position, lines)
-    positions_to_search = lambda do |position|
-      x = position[0] - 1
-      below = position[1] - 1
-      above = position[1] + 1
-      (below..above).collect { |y| [x, y] }.reject do |(x, y)|
-        x < 0 || y < 0
-      end
+    # This is a hash that maps edge characters to options for where to search
+    # next to follow the edge. Each option consists of an array that contains
+    # two elements: a position delta (represented as a sub-array containing
+    # separate X and Y deltas), and a set of valid edge characters that could
+    # be found after applying the position delta. The special :initial entry
+    # represents what to do on the first step of the algorithm.
+    next_steps = {
+      '-' => [
+        [[-1, 0], '-'],
+      ],
+      '\\' => [
+        [[-1, 1], '-\\|'],
+      ],
+      '|' => [
+        [[0, 1], '|'],
+      ],
+      '/' => [
+        [[-1, -1], '/-'],
+      ],
+      :initial => [
+        [[-1, 1], '\\'],
+        [[-1, 0], '-'],
+        [[-1, -1], '/'],
+      ],
+    }
+
+    inner = nil
+    continue_search = lambda do |current_character, position|
+      x, y = position
+      next_steps[current_character].collect do |d, cs|
+        dx, dy = d
+        inner.call [x + dx, y + dy], cs
+      end.reject { |p| p.nil? }
     end
 
-    inner = lambda do |position|
+    inner = lambda do |position, valid_edge_characters|
       x, y = position
+      return unless x >= 0 && y >= 0
       parent = nodes_by_position[[x, y]]
       return parent unless parent.nil?
       line = lines[y]
@@ -108,22 +135,17 @@ module AsciiDag
       ord = line[x]
       return if ord.nil?
       case ord.chr
-      when '-'
-        inner.call [x - 1, y]
-      when '\\'
-        inner.call [x - 1, y + 1]
-      when '|'
-        inner.call [x, y + 1]
-      when '/'
-        inner.call [x - 1, y - 1]
+      when /[-\/\\|]/
+        return unless valid_edge_characters.chars.include?(ord.chr)
+        continue_search.call ord.chr, position
       when NODE_REGEXP
         # This might be part of a multi-character node label.
         start_x = line.rindex(/[\s\-\/\\|]/, x)
         return if start_x.nil?
-        inner.call [start_x + 1, y]
+        inner.call [start_x + 1, y], ''
       end
     end
-    positions_to_search.call(position).collect { |p| inner.call p }.reject { |p| p.nil? }
+    continue_search.call(:initial, position).flatten
   end
 
   NODE_REGEXP = /[^\s\-\/\\|]+/

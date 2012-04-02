@@ -49,6 +49,16 @@ EOF
         \\        \\
          t--t--t--m <-- their branch:
 EOF
+
+    @graph8 = AsciiDag.parse <<-EOF
+G-Y-G-W-W-W-X-X-X-X
+	   \\ /
+	    W-W-B
+	   /
+Y---G-W---W
+ \\ /   \\
+Y-Y     X-X-X-X
+EOF
   end
 
   test 'parses nodes' do
@@ -105,7 +115,7 @@ EOF
     c = find_node @graph4, 'C'
     g = find_node @graph4, 'G'
     h = find_node @graph4, 'H'
-    assert_equal [g, c], h.parents
+    assert_equal [c, g], h.parents
   end
 
   test 'nodes get unique IDs' do
@@ -153,5 +163,18 @@ EOF
   test 'should replace apostrophes with primes' do
     a = find_node @graph2, "A'"
     assert_equal "A&#8242;", a.dot_label
+  end
+
+  test 'should only follow edges in allowed directions' do
+    xs = find_all_nodes @graph8, 'X'
+    ws = find_all_nodes @graph8, 'W'
+
+    x = xs[4]
+    w = ws[6]
+    assert_equal [w], x.parents
+
+    w2 = ws[2]
+    w3 = ws[3]
+    assert_equal [w2], w3.parents
   end
 end
