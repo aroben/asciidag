@@ -2,65 +2,65 @@ require File.expand_path '../test_helper', __FILE__
 
 context 'Parser' do
   setup do
-    @graph1 = AsciiDag.parse <<-EOF
+    @graph1 = AsciiDag.parse <<'EOF'
       A---B---C topic
      /
 D---E---F---G master
 EOF
 
-    @graph2 = AsciiDag.parse <<-EOF
+    @graph2 = AsciiDag.parse <<'EOF'
                B'---C' topic
               /
 D---E---A'---F master
 EOF
 
-    @graph3 = AsciiDag.parse <<-EOF
+    @graph3 = AsciiDag.parse <<'EOF'
 o---o---o---o---o  master
-    |            \\
+    |            \
     |             o'--o'--o'  topic
-     \\
+     \
       o---o---o---o---o  next
 EOF
 
-    @graph4 = AsciiDag.parse <<-EOF
+    @graph4 = AsciiDag.parse <<'EOF'
       A---B---C topic
-     /         \\
+     /         \
 D---E---F---G---H master
 EOF
 
-    @graph5 = AsciiDag.parse <<-EOF
+    @graph5 = AsciiDag.parse <<'EOF'
 		E-------F
-		 \\       \\
+		 \       \
 		  G---H---I---J
-			       \\
+			       \
 				L--M
 EOF
 
-    @graph6 = AsciiDag.parse <<-EOF
+    @graph6 = AsciiDag.parse <<'EOF'
          o--o--o <-- Branch A
         /
  o--o--o <-- master
-        \\
+        \
          o--o--o <-- Branch B
 EOF
 
-    @graph7 = AsciiDag.parse <<-EOF
+    @graph7 = AsciiDag.parse <<'EOF'
  o--o--O--o--o--o <-- origin
-        \\        \\
+        \        \
          t--t--t--m <-- their branch:
 EOF
 
-    @graph8 = AsciiDag.parse <<-EOF
+    @graph8 = AsciiDag.parse <<'EOF'
 G-Y-G-W-W-W-X-X-X-X
-	   \\ /
+	   \ /
 	    W-W-B
 	   /
 Y---G-W---W
- \\ /   \\
+ \ /   \
 Y-Y     X-X-X-X
 EOF
 
-    @graph9 = AsciiDag.parse <<-EOF
+    @graph9 = AsciiDag.parse <<'EOF'
                  H'--I'--J'  topicB
                 /
                 | E---F---G  topicA
@@ -68,10 +68,10 @@ EOF
     A---B---C---D  master
 EOF
 
-    @graph10 = AsciiDag.parse <<-EOF
+    @graph10 = AsciiDag.parse <<'EOF'
 1 2 3
 A-B-C
-     \\6 7 8
+     \6 7 8
       F-G-H
 1   2/
 D---E
