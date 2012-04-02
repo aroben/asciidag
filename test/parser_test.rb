@@ -88,6 +88,14 @@ EOF
 		/
 	---o---1---o---o---o---A
 EOF
+
+    @graph13 = AsciiDag.parse <<'EOF'
+	       o---o---o---o---C
+	      /
+	     /   o---o---o---B
+	    /   /
+	---2---1---o---o---o---A
+EOF
   end
 
   test 'parses nodes' do
@@ -213,13 +221,15 @@ EOF
     assert_equal [d], h.parents
   end
 
-  test 'should treat numbers with no parents as labels' do
+  test 'should treat disconnected numbers as labels' do
     six = find_branch_label @graph10, '6'
     assert_not_nil six
 
     seven = find_node @graph10, '7'
     assert_nil seven
+  end
 
+  test 'should treat numbers with parents as nodes' do
     one = find_node @graph12, '1'
     assert_not_nil one
     os = find_all_nodes @graph12, 'o'
@@ -227,6 +237,11 @@ EOF
 
     assert_equal [one], os[1].parents
     assert_equal [os[0]], one.parents
+  end
+
+  test 'should treat numbers that are parents as nodes' do
+    two = find_node @graph13, '2'
+    assert_not_nil two
   end
 
   test 'allows hyphens in arrowed branch labels' do
