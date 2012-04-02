@@ -43,14 +43,14 @@ module AsciiDag
       result << '  node [shape=circle];'
       nodes.each do |node|
         x, y = node.position
-        result << "  #{node.id} [label=\"#{node.label}\", pos=\"#{x * PIXELS_PER_CHARACTER_X},#{y * PIXELS_PER_CHARACTER_Y}\"];"
+        result << "  #{node.id} [label=\"#{node.dot_label}\", pos=\"#{x * PIXELS_PER_CHARACTER_X},#{y * PIXELS_PER_CHARACTER_Y}\"];"
         node.parents.each do |parent|
           result << "  #{node.id} -> #{parent.id};"
         end
       end
       branch_labels.each do |branch|
         x, y = branch.position
-        result << "  #{branch.id} [shape=none, label=\"#{branch.label}\", pos=\"#{x * PIXELS_PER_CHARACTER_X},#{y * PIXELS_PER_CHARACTER_Y}\"];"
+        result << "  #{branch.id} [shape=none, label=\"#{branch.dot_label}\", pos=\"#{x * PIXELS_PER_CHARACTER_X},#{y * PIXELS_PER_CHARACTER_Y}\"];"
       end
       result << '}'
       result.join "\n"
@@ -65,6 +65,10 @@ module AsciiDag
       @label = label
       @position = [x, y]
       @parents = []
+    end
+
+    def dot_label
+      label.gsub "'", '&#8242;'
     end
 
     def inspect

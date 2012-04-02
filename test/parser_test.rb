@@ -149,4 +149,9 @@ EOF
     assert_not_nil their_branch
     assert_equal [20, 0], their_branch.position
   end
+
+  test 'should replace apostrophes with primes' do
+    a = find_node @graph2, "A'"
+    assert_equal "A&#8242;", a.dot_label
+  end
 end
