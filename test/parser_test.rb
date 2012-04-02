@@ -85,10 +85,10 @@ EOF
   end
 
   test 'handles multiple nodes with the same label' do
-    os = @graph3.nodes.find_all { |n| n.label == 'o' }
+    os = find_all_nodes @graph3, 'o'
     assert_equal 10, os.length
 
-    o_primes = @graph3.nodes.find_all { |n| n.label == "o'" }
+    o_primes = find_all_nodes @graph3, "o'"
     assert_equal 3, o_primes.length
 
     origin = os[5]

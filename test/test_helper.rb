@@ -35,3 +35,7 @@ end
 def find_node(graph, label)
   return graph.nodes.find { |n| n.label == label }
 end
+
+def find_all_nodes(graph, label)
+  return graph.nodes.find_all { |n| n.label == label }
+end
