@@ -82,6 +82,12 @@ EOF
   \         /
    A---B---C----------------D---E   <-- fixed-up topic branch
 EOF
+
+    @graph12 = AsciiDag.parse <<'EOF'
+		 o---o---o---B
+		/
+	---o---1---o---o---o---A
+EOF
   end
 
   test 'parses nodes' do
@@ -207,12 +213,20 @@ EOF
     assert_equal [d], h.parents
   end
 
-  test 'should treat numbers as labels' do
+  test 'should treat numbers with no parents as labels' do
     six = find_branch_label @graph10, '6'
     assert_not_nil six
 
     seven = find_node @graph10, '7'
     assert_nil seven
+
+    one = find_node @graph12, '1'
+    assert_not_nil one
+    os = find_all_nodes @graph12, 'o'
+    assert_equal 7, os.length
+
+    assert_equal [one], os[1].parents
+    assert_equal [os[0]], one.parents
   end
 
   test 'allows hyphens in arrowed branch labels' do
