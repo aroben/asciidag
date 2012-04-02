@@ -76,6 +76,12 @@ A-B-C
 1   2/
 D---E
 EOF
+
+    @graph11 = AsciiDag.parse <<'EOF'
+ P---o---o---M---x---x---W---x
+  \         /
+   A---B---C----------------D---E   <-- fixed-up topic branch
+EOF
   end
 
   test 'parses nodes' do
@@ -207,5 +213,10 @@ EOF
 
     seven = find_node @graph10, '7'
     assert_nil seven
+  end
+
+  test 'allows hyphens in arrowed branch labels' do
+    label = find_branch_label @graph11, 'fixed-up topic branch'
+    assert_not_nil label
   end
 end

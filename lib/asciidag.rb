@@ -156,7 +156,7 @@ module AsciiDag
   end
 
   NODE_REGEXP = /[^\s\-\/\\|]+/
-  ARROWED_BRANCH_LABEL_REGEXP = /\s+(<--) ([\w\s:]+)$/
+  ARROWED_BRANCH_LABEL_REGEXP = /\s+(<--) ([\w\s:-]+)$/
   PIXELS_PER_CHARACTER_X = 25
   PIXELS_PER_CHARACTER_Y = 40
 end
