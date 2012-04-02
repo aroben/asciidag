@@ -90,42 +90,49 @@ module AsciiDag
   end
 
   def self.find_parents(position, nodes_by_position, lines)
-    # This is a hash that maps edge characters to options for where to search
-    # next to follow the edge. Each option consists of an array that contains
-    # two elements: a position delta (represented as a sub-array containing
-    # separate X and Y deltas), and a set of valid edge characters that could
-    # be found after applying the position delta. The special :initial entry
-    # represents what to do on the first step of the algorithm.
+    # This hash maps edge characters to options for where to search next to
+    # follow the edge. Each option consists of an array that contains three
+    # elements: a position delta (represented as a sub-array containing
+    # separate X and Y deltas), a set of valid edge characters that could be
+    # found after applying the position delta, and a valid Y direction. The
+    # special :initial entry represents what to do on the first step of the
+    # algorithm.
     next_steps = {
       '-' => [
-        [[-1, 0], '-'],
+        [[-1, 0], '-', :either],
       ],
       '\\' => [
-        [[-1, 1], '-\\|'],
+        [[-1, 1], '-\\|', :up],
       ],
       '|' => [
-        [[0, 1], '|'],
+        [[0, 1], '|', :up],
+        [[0, -1], '|', :down],
       ],
       '/' => [
-        [[-1, -1], '/-'],
+        [[-1, -1], '/-', :down],
+        # At least one diagram in the Git docs contains a pipe directly beneath
+        # a slash, so we allow it.
+        [[0, -1], '|', :down],
       ],
       :initial => [
-        [[-1, 1], '\\'],
-        [[-1, 0], '-'],
-        [[-1, -1], '/'],
+        [[-1, 1], '\\', :up],
+        [[-1, 0], '-', :either],
+        [[-1, -1], '/', :down],
       ],
     }
 
     inner = nil
-    continue_search = lambda do |current_character, position|
+    continue_search = lambda do |current_character, position, direction|
       x, y = position
-      next_steps[current_character].collect do |d, cs|
-        dx, dy = d
-        inner.call [x + dx, y + dy], cs
+      valid_steps = next_steps[current_character].select { |_, _, dir| [dir, :either].include? direction }
+      valid_steps.collect do |delta, cs, dir|
+        dx, dy = delta
+        strictest_direction = dir == :either ? direction : dir
+        inner.call [x + dx, y + dy], cs, strictest_direction
       end.reject { |p| p.nil? }
     end
 
-    inner = lambda do |position, valid_edge_characters|
+    inner = lambda do |position, valid_edge_characters, valid_direction|
       x, y = position
       return unless x >= 0 && y >= 0
       parent = nodes_by_position[[x, y]]
@@ -137,15 +144,15 @@ module AsciiDag
       case ord.chr
       when /[-\/\\|]/
         return unless valid_edge_characters.chars.include?(ord.chr)
-        continue_search.call ord.chr, position
+        continue_search.call ord.chr, position, valid_direction
       when NODE_REGEXP
         # This might be part of a multi-character node label.
         start_x = line.rindex(/[\s\-\/\\|]/, x)
         return if start_x.nil?
-        inner.call [start_x + 1, y], ''
+        inner.call [start_x + 1, y], '', valid_direction
       end
     end
-    continue_search.call(:initial, position).flatten
+    continue_search.call(:initial, position, :either).flatten
   end
 
   NODE_REGEXP = /[^\s\-\/\\|]+/

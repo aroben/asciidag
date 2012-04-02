@@ -59,6 +59,14 @@ Y---G-W---W
  \\ /   \\
 Y-Y     X-X-X-X
 EOF
+
+    @graph9 = AsciiDag.parse <<-EOF
+                 H'--I'--J'  topicB
+                /
+                | E---F---G  topicA
+                |/
+    A---B---C---D  master
+EOF
   end
 
   test 'parses nodes' do
@@ -176,5 +184,11 @@ EOF
     w2 = ws[2]
     w3 = ws[3]
     assert_equal [w2], w3.parents
+  end
+
+  test 'should follow pipe underneath slash' do
+    h = find_node @graph9, "H'"
+    d = find_node @graph9, 'D'
+    assert_equal [d], h.parents
   end
 end
