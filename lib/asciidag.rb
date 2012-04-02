@@ -74,7 +74,7 @@ module AsciiDag
     end
 
     def dot_label
-      label.gsub "'", '&#8242;'
+      label.gsub("'", '&#8242;').gsub('"', '')
     end
 
     def inspect

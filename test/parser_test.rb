@@ -96,6 +96,13 @@ EOF
 	    /   /
 	---2---1---o---o---o---A
 EOF
+
+    @graph14 = AsciiDag.parse <<'EOF'
+            "master"
+        o---o
+             \                    "topic"
+              o---o---o---o---o---o
+EOF
   end
 
   test 'parses nodes' do
@@ -247,5 +254,10 @@ EOF
   test 'allows hyphens in arrowed branch labels' do
     label = find_branch_label @graph11, 'fixed-up topic branch'
     assert_not_nil label
+  end
+
+  test 'should remove quotes from branch labels' do
+    label = find_branch_label @graph14, '"master"'
+    assert_equal 'master', label.dot_label
   end
 end
