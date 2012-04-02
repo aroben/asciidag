@@ -34,7 +34,7 @@ module AsciiDag
       nodes.each_with_index do |node, i|
         node.id = "node#{i}"
       end
-      @branch_labels, @nodes = nodes.partition { |node| node.label =~ /[a-z]{2,}/ }
+      @branch_labels, @nodes = nodes.partition { |node| node.label =~ /[a-z]{2,}|\d/ }
     end
 
     def dot

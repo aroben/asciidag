@@ -67,6 +67,15 @@ EOF
                 |/
     A---B---C---D  master
 EOF
+
+    @graph10 = AsciiDag.parse <<-EOF
+1 2 3
+A-B-C
+     \\6 7 8
+      F-G-H
+1   2/
+D---E
+EOF
   end
 
   test 'parses nodes' do
@@ -190,5 +199,13 @@ EOF
     h = find_node @graph9, "H'"
     d = find_node @graph9, 'D'
     assert_equal [d], h.parents
+  end
+
+  test 'should treat numbers as labels' do
+    six = find_branch_label @graph10, '6'
+    assert_not_nil six
+
+    seven = find_node @graph10, '7'
+    assert_nil seven
   end
 end
