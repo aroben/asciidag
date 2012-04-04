@@ -2,6 +2,7 @@ require 'coreext/string'
 
 module AsciiDag
   def self.parse(text)
+    branch_labels = []
     nodes = []
     nodes_by_position = {}
     add_node = lambda do |node|
@@ -12,7 +13,8 @@ module AsciiDag
 
     lines = text.gsub("\t", ' ' * 8).split("\n").reverse
     lines.each_with_index do |line, y|
-      add_node.call find_and_remove_arrowed_branch_label(line, y)
+      branch_label = find_and_remove_arrowed_branch_label(line, y)
+      branch_labels << branch_label unless branch_label.nil?
 
       i = 0
       while i < line.length
@@ -26,20 +28,23 @@ module AsciiDag
     nodes.each do |node|
       node.parents = find_parents node.position, nodes_by_position, lines
     end
-    Graph.new nodes
+    all_parents = nodes.inject({}) do |parents, node|
+      node.parents.each do |parent|
+        parents[parent.id] = 1
+      end
+      parents
+    end
+    nodes, disconnected_nodes = nodes.partition { |node| node.parents.length > 0 || all_parents.has_key?(node.id) }
+    branch_labels += disconnected_nodes
+    Graph.new nodes, branch_labels
   end
 
   class Graph
     attr_reader :nodes, :branch_labels
 
-    def initialize(nodes)
-      all_parents = nodes.inject({}) do |parents, node|
-        node.parents.each do |parent|
-          parents[parent.id] = 1
-        end
-        parents
-      end
-      @nodes, @branch_labels = nodes.partition { |node| node.parents.length > 0 || all_parents.has_key?(node.id) }
+    def initialize(nodes, branch_labels)
+      @nodes = nodes
+      @branch_labels = branch_labels
     end
 
     def dot
