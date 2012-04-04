@@ -33,9 +33,6 @@ module AsciiDag
     attr_reader :nodes, :branch_labels
 
     def initialize(nodes)
-      nodes.each_with_index do |node, i|
-        node.id = "node#{i}"
-      end
       all_parents = nodes.inject({}) do |parents, node|
         node.parents.each do |parent|
           parents[parent.id] = 1
@@ -69,10 +66,14 @@ module AsciiDag
     attr_reader :label, :position
     attr_accessor :id, :parents
 
+    @@id_number = 0
+
     def initialize(label, x, y)
       @label = label
       @position = [x, y]
       @parents = []
+      @id = "node#{@@id_number}"
+      @@id_number += 1
     end
 
     def dot_label
