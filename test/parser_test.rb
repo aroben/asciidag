@@ -103,6 +103,17 @@ EOF
              \                    "topic"
               o---o---o---o---o---o
 EOF
+
+    @graph15 = AsciiDag.parse <<'EOF'
+                                "topicB"
+               o---o---o---o---o---* (pretend merge)
+              /                   /
+             /o---o---o----------'
+            |/        "topicA"
+        o---o"master"
+             \                    "topic"
+              o---o---o---o---o---o
+EOF
   end
 
   test 'parses nodes' do
@@ -257,7 +268,19 @@ EOF
   end
 
   test 'should remove quotes from branch labels' do
-    label = find_branch_label @graph14, '"master"'
+    label = find_branch_label @graph14, 'master'
+    assert_equal 'master', label.label
     assert_equal 'master', label.dot_label
+  end
+
+  test 'should not merge nodes with adjacent quoted branch labels' do
+    os = find_all_nodes @graph15, 'o'
+    o = os[7]
+    assert_equal [12, 2], o.position
+    assert_equal 'o', o.label
+    assert_equal [os[6]], o.parents
+
+    master = find_branch_label @graph15, 'master'
+    assert_not_nil master
   end
 end

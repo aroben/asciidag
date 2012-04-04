@@ -13,7 +13,7 @@ module AsciiDag
 
     lines = text.gsub("\t", ' ' * 8).split("\n").reverse
     lines.each_with_index do |line, y|
-      branch_label = find_and_remove_arrowed_branch_label(line, y)
+      branch_label = find_and_remove_branch_label(line, y)
       branch_labels << branch_label unless branch_label.nil?
 
       i = 0
@@ -82,7 +82,7 @@ module AsciiDag
     end
 
     def dot_label
-      label.gsub("'", '&#8242;').gsub('"', '')
+      label.gsub "'", '&#8242;'
     end
 
     def inspect
@@ -93,13 +93,19 @@ module AsciiDag
 
   private
 
-  def self.find_and_remove_arrowed_branch_label(line, y)
-      match = line.match ARROWED_BRANCH_LABEL_REGEXP
+  def self.find_and_remove_branch_label(line, y)
+      match = line.match BRANCH_LABEL_REGEXP
       return if match.nil?
-      label = match[2]
-      # Position the label where the arrow starts.
-      x = match.offset(1)[0]
-      line[ARROWED_BRANCH_LABEL_REGEXP] = ''
+      group_number = match[1].nil? ? 2 : 1
+      label = match[group_number]
+      x = match.offset(group_number)[0]
+      line[BRANCH_LABEL_REGEXP] = ''
+      match = line.match ARROW_REGEXP
+      unless match.nil?
+        # Position the label where the arrow starts.
+        x = match.offset(1)[0]
+        line[ARROW_REGEXP] = ''
+      end
       Node.new label, x, y
   end
 
@@ -155,22 +161,22 @@ module AsciiDag
       return if line.nil?
       ord = line[x]
       return if ord.nil?
-      case ord.chr
-      when /[-\/\\|]/
+      if ord.chr =~ /[-\/\\|]/
         return unless valid_edge_characters.chars.include?(ord.chr)
         continue_search.call ord.chr, position, valid_direction
-      when NODE_REGEXP
+      else
         # This might be part of a multi-character node label.
-        start_x = line.rindex(/[\s\-\/\\|]/, x)
-        return if start_x.nil?
-        inner.call [start_x + 1, y], '', valid_direction
+        start_x = line.rindex(NODE_REGEXP, x)
+        return if start_x.nil? || start_x + line.substring_after(start_x)[NODE_REGEXP].length != x + 1
+        inner.call [start_x, y], 'n', valid_direction
       end
     end
     continue_search.call(:initial, position, :either).flatten
   end
 
-  NODE_REGEXP = /[^\s\-\/\\|]+/
-  ARROWED_BRANCH_LABEL_REGEXP = /\s+(<--) ([\w\s:-]+)$/
+  NODE_REGEXP = /\w'?/
+  BRANCH_LABEL_REGEXP = /(?:(\w\w.*?)|"(.+?)")\s*$/
+  ARROW_REGEXP = /\s+(<--)\s+$/
   PIXELS_PER_CHARACTER_X = 25
   PIXELS_PER_CHARACTER_Y = 40
 end
