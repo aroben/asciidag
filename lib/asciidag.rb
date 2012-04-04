@@ -1,3 +1,5 @@
+require 'coreext/string'
+
 module AsciiDag
   def self.parse(text)
     nodes = []
@@ -16,7 +18,7 @@ module AsciiDag
       while i < line.length
         x = line.index NODE_REGEXP, i
         break if x.nil?
-        label = line[x, line.length - x][NODE_REGEXP]
+        label = line.substring_after(x)[NODE_REGEXP]
         add_node.call Node.new(label, x, y)
         i = x + label.length
       end
