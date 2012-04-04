@@ -114,6 +114,10 @@ EOF
              \                    "topic"
               o---o---o---o---o---o
 EOF
+
+    @graph16 = AsciiDag.parse <<'EOF'
+    ---Z---o---X--...---o---A---o---o---Y*--...---o---B*--D*
+EOF
   end
 
   test 'parses nodes' do
@@ -282,5 +286,11 @@ EOF
 
     master = find_branch_label @graph15, 'master'
     assert_not_nil master
+  end
+
+  test 'should allow asterisks in node names' do
+    b = find_node @graph16, 'B*'
+    d = find_node @graph16, 'D*'
+    assert_equal [b], d.parents
   end
 end
