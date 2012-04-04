@@ -168,7 +168,7 @@ module AsciiDag
         # This might be part of a multi-character node label.
         start_x = line.rindex(NODE_REGEXP, x)
         return if start_x.nil? || start_x + line.substring_after(start_x)[NODE_REGEXP].length != x + 1
-        inner.call [start_x, y], 'n', valid_direction
+        inner.call [start_x, y], '', valid_direction
       end
     end
     continue_search.call(:initial, position, :either).flatten
