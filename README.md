@@ -40,6 +40,8 @@ and cloned with:
 git clone git://github.com/aroben/asciidag.git
 ```
 
+[![Build Status](https://secure.travis-ci.org/aroben/asciidag.png)](http://travis-ci.org/aroben/asciidag)
+
 ### Contributing
 
 If you'd like to hack on AsciiDag, follow these instructions:
