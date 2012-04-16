@@ -97,7 +97,7 @@ module AsciiDag
   def self.find_and_remove_branch_label(line, y)
       match = line.match BRANCH_LABEL_REGEXP
       return if match.nil?
-      group_number = match[1].nil? ? 2 : 1
+      group_number = match.captures.index { |c| !c.nil? } + 1
       label = match[group_number]
       x = match.offset(group_number)[0]
       line[BRANCH_LABEL_REGEXP] = ''
@@ -177,7 +177,7 @@ module AsciiDag
   end
 
   NODE_REGEXP = /\w(?:\d)?['*]?/
-  BRANCH_LABEL_REGEXP = /(?:(\w{3,}.*?)|"(.+?)")\s*$/
+  BRANCH_LABEL_REGEXP = /(?:(\w{3,}.*?)|"(.+?)"|(\(.+?\)))\s*$/
   ARROW_REGEXP = /\s+(<--)\s+$/
   PIXELS_PER_CHARACTER_X = 25
   PIXELS_PER_CHARACTER_Y = 40

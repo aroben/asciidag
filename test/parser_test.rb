@@ -344,4 +344,10 @@ EOF
     assert_equal [12, 2], os[7].position
     assert_equal [os[7]], os[11].parents
   end
+
+  test 'should allow parenthesized branch labels' do
+    graph = AsciiDag.parse @graph5
+    label = find_branch_label graph, '(pretend merge)'
+    assert_not_nil label
+  end
 end
