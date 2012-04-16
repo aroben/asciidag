@@ -350,4 +350,10 @@ EOF
     label = find_branch_label graph, '(pretend merge)'
     assert_not_nil label
   end
+
+  test 'should parse asterisk as node label' do
+    graph = AsciiDag.parse @graph5
+    star = find_node graph, '*'
+    assert_not_nil star
+  end
 end
