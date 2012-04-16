@@ -50,6 +50,7 @@ module AsciiDag
     def dot
       result = []
       result << 'digraph {'
+      result << '  graph [splines=true, overlap=false];'
       result << '  node [shape=circle];'
       nodes.each do |node|
         x, y = node.position
