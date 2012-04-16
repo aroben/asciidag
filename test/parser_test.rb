@@ -27,6 +27,17 @@ EOF
      /         \
 D---E---F---G---H master
 EOF
+
+    @graph5 = <<'EOF'
+                                "topicB"
+               o---o---o---o---o---* (pretend merge)
+              /                   /
+             /o---o---o----------'
+            |/        "topicA"
+        o---o"master"
+             \                    "topic"
+              o---o---o---o---o---o
+EOF
   end
 
   test 'parses nodes' do
@@ -276,16 +287,7 @@ EOF
   end
 
   test 'should not merge nodes with adjacent quoted branch labels' do
-    graph = AsciiDag.parse <<'EOF'
-                                "topicB"
-               o---o---o---o---o---* (pretend merge)
-              /                   /
-             /o---o---o----------'
-            |/        "topicA"
-        o---o"master"
-             \                    "topic"
-              o---o---o---o---o---o
-EOF
+    graph = AsciiDag.parse @graph5
 
     os = find_all_nodes graph, 'o'
     o = os[7]
@@ -331,5 +333,15 @@ EOF
     r2prime = find_node graph, "r2'"
     assert_equal [], r1.parents
     assert_equal [r1], r2prime.parents
+  end
+
+  test 'should follow pipe after slash' do
+    graph = AsciiDag.parse @graph5
+
+    os = find_all_nodes graph, 'o'
+
+    assert_equal [15, 6], os[11].position
+    assert_equal [12, 2], os[7].position
+    assert_equal [os[7]], os[11].parents
   end
 end

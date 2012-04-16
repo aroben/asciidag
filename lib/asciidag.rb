@@ -114,22 +114,22 @@ module AsciiDag
     # follow the edge. Each option consists of an array that contains three
     # elements: a position delta (represented as a sub-array containing
     # separate X and Y deltas), a set of valid edge characters that could be
-    # found after applying the position delta, and a valid Y direction. The
-    # special :initial entry represents what to do on the first step of the
-    # algorithm.
+    # found after applying the position delta (or 'n', to signify that a node
+    # could be found), and a valid Y direction. The special :initial entry
+    # represents what to do on the first step of the algorithm.
     next_steps = {
       '-' => [
-        [[-1, 0], '-', :either],
+        [[-1, 0], '-n', :either],
       ],
       '\\' => [
-        [[-1, 1], '-\\|', :up],
+        [[-1, 1], '-\\|n', :up],
       ],
       '|' => [
-        [[0, 1], '|', :up],
-        [[0, -1], '|', :down],
+        [[0, 1], '|n', :up],
+        [[0, -1], '|n', :down],
       ],
       '/' => [
-        [[-1, -1], '/-', :down],
+        [[-1, -1], '/-|n', :down],
         # At least one diagram in the Git docs contains a pipe directly beneath
         # a slash, so we allow it.
         [[0, -1], '|', :down],
@@ -156,7 +156,7 @@ module AsciiDag
       x, y = position
       return unless x >= 0 && y >= 0
       parent = nodes_by_position[[x, y]]
-      return parent unless parent.nil?
+      return parent unless parent.nil? || !valid_edge_characters.chars.include?('n')
       line = lines[y]
       return if line.nil?
       ord = line[x]
@@ -166,9 +166,10 @@ module AsciiDag
         continue_search.call ord.chr, position, valid_direction
       else
         # This might be part of a multi-character node label.
+        return unless valid_edge_characters.chars.include?('n')
         start_x = line.index_of_earliest_match_ending_at NODE_REGEXP, x
         return if start_x.nil? || start_x + line.substring_after(start_x)[NODE_REGEXP].length != x + 1
-        inner.call [start_x, y], '', valid_direction
+        inner.call [start_x, y], 'n', valid_direction
       end
     end
     continue_search.call(:initial, position, :either).flatten
