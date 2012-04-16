@@ -313,9 +313,23 @@ EOF
                 \
                  A---B master
 EOF
+
     r1 = find_node graph, 'r1'
     r2 = find_node graph, 'r2'
     assert_equal [], r1.parents
     assert_equal [r1], r2.parents
+  end
+
+  test 'should allow number-with-prime-suffixed node names' do
+    graph = AsciiDag.parse <<'EOF'
+    r1---r2'--r3' remotes/git-svn
+      \
+       r2---r3---A---B master
+EOF
+
+    r1 = find_node graph, 'r1'
+    r2prime = find_node graph, "r2'"
+    assert_equal [], r1.parents
+    assert_equal [r1], r2prime.parents
   end
 end

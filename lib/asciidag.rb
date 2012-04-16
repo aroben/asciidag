@@ -174,7 +174,7 @@ module AsciiDag
     continue_search.call(:initial, position, :either).flatten
   end
 
-  NODE_REGEXP = /\w[0-9'*]?/
+  NODE_REGEXP = /\w(?:\d)?['*]?/
   BRANCH_LABEL_REGEXP = /(?:(\w{3,}.*?)|"(.+?)")\s*$/
   ARROW_REGEXP = /\s+(<--)\s+$/
   PIXELS_PER_CHARACTER_X = 25
