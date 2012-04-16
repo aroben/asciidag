@@ -307,7 +307,7 @@ EOF
     assert_equal [b], d.parents
   end
 
-  test 'should number-suffixed node names' do
+  test 'should allow number-suffixed node names' do
     graph = AsciiDag.parse <<'EOF'
     r1---r2---r3 remotes/git-svn
                 \
