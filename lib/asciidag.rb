@@ -166,7 +166,7 @@ module AsciiDag
         continue_search.call ord.chr, position, valid_direction
       else
         # This might be part of a multi-character node label.
-        start_x = line.rindex(NODE_REGEXP, x)
+        start_x = line.index_of_earliest_match_ending_at NODE_REGEXP, x
         return if start_x.nil? || start_x + line.substring_after(start_x)[NODE_REGEXP].length != x + 1
         inner.call [start_x, y], '', valid_direction
       end
@@ -174,8 +174,8 @@ module AsciiDag
     continue_search.call(:initial, position, :either).flatten
   end
 
-  NODE_REGEXP = /\w['*]?/
-  BRANCH_LABEL_REGEXP = /(?:(\w\w.*?)|"(.+?)")\s*$/
+  NODE_REGEXP = /\w[0-9'*]?/
+  BRANCH_LABEL_REGEXP = /(?:(\w{3,}.*?)|"(.+?)")\s*$/
   ARROW_REGEXP = /\s+(<--)\s+$/
   PIXELS_PER_CHARACTER_X = 25
   PIXELS_PER_CHARACTER_Y = 40

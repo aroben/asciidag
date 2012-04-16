@@ -118,6 +118,12 @@ EOF
     @graph16 = AsciiDag.parse <<'EOF'
     ---Z---o---X--...---o---A---o---o---Y*--...---o---B*--D*
 EOF
+
+    @graph17 = AsciiDag.parse <<'EOF'
+    r1---r2---r3 remotes/git-svn
+                \
+                 A---B master
+EOF
   end
 
   test 'parses nodes' do
@@ -292,5 +298,12 @@ EOF
     b = find_node @graph16, 'B*'
     d = find_node @graph16, 'D*'
     assert_equal [b], d.parents
+  end
+
+  test 'should number-suffixed node names' do
+    r1 = find_node @graph17, 'r1'
+    r2 = find_node @graph17, 'r2'
+    assert_equal [], r1.parents
+    assert_equal [r1], r2.parents
   end
 end
